@@ -146,11 +146,11 @@ app.post("/categories", (req, res) => {
 });
 
 // Create a new product
-app.post("/products", (req, res) => {
-  const { product_name, description, price } = req.body;
+app.post("/add-products", (req, res) => {
+  const { product_name, category_id, price, image_url } = req.body;
   connection.query(
-    "INSERT INTO Products (product_name, description, price) VALUES (?, ?, ?)",
-    [product_name, description, price],
+    "INSERT INTO Products (product_name, price, category_id, image_url) VALUES (?, ?, ?, ?)",
+    [product_name, price, category_id, image_url],
     (err, result) => {
       if (err) {
         res.status(500).send(err.message);
