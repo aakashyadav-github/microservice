@@ -156,7 +156,7 @@ app.post("/outlets", (req, res) => {
 app.post("/categories", (req, res) => {
   const { categoryName } = req.body;
   connection.query(
-    "INSERT INTO categories (name) VALUES ($1)",
+    "INSERT INTO categories (name) VALUES ($1) RETURNING *",
     [categoryName],
     (err, result) => {
       if (err) {
