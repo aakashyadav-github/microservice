@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const port = 3002;
+const { Client } = require('pg');
 
 var cors = require("cors");
 
@@ -11,22 +12,29 @@ app.listen(port, () => {
 });
 
 const bodyParser = require("body-parser");
-const mysql = require("mysql2");
 
 app.use(bodyParser.json());
 
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "Aakash12@",
-  database: "ram-shiv-db",
+const connection = new Client({
+  user: 'root',
+  host: 'dpg-chu4v2ndvk4olivdc7og-a',
+  database: 'ram_shiv_db',
+  password: 'aAEKnxPOX7EksJRIb0fAR6Zh0dQckQq7',
+  port: 5432, // default PostgreSQL port
 });
+
+// const connection = mysql.createConnection({
+//   host: "",
+//   user: "root",
+//   password: "Aakash12@",
+//   database: "ram-shiv-db",
+// });
 
 connection.connect((err) => {
   if (err) {
-    console.error("Error connecting to the database:", err);
+    console.error('Error connecting to PostgreSQL:', err);
   } else {
-    console.log("Connected to the database");
+    console.log('Connected to PostgreSQL database!');
   }
 });
 
