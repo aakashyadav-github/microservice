@@ -34,8 +34,9 @@ connection.connect((err) => {
 app.get('/products', (req, res) => {
   const query = `
     SELECT 
-      p.*, 
-      c.*, 
+      p.id, p.product_name, 
+      c.id as category_id ,
+      c.name as category_name, 
       w.warehouse_id, 
       w.quantity_available AS warehouse_qty, 
       o.outlet_id, 
@@ -49,11 +50,10 @@ app.get('/products', (req, res) => {
 
   connection.query(query, (error, results) => {
     if (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: error.message }); 
     } else {
       const productData = [];
-      const productMap = {};
-
+      // console.log(results);
       for (const row of results) {
         const {
           id,
@@ -65,9 +65,24 @@ app.get('/products', (req, res) => {
           outlet_id,
           outlet_qty,
         } = row;
+       
+        const product = productData.find((p) => p.id === id);
+        if (product) {
+          if (warehouse_id && warehouse_qty !== null) {
+            product.warehouse_stock.push({
+              warehouse_id,
+              quantity: warehouse_qty,
+            });
+          }
 
-        if (!productMap[id]) {
-          productMap[id] = {
+          if (outlet_id && outlet_qty !== null) {
+            product.outlet_stock.push({
+              outlet_id,
+              quantity: outlet_qty,
+            });
+          }
+        } else {
+          const newProduct = {
             id,
             product_name,
             category: {
@@ -78,21 +93,21 @@ app.get('/products', (req, res) => {
             outlet_stock: [],
           };
 
-          productData.push(productMap[id]);
-        }
+          if (warehouse_id && warehouse_qty !== null) {
+            newProduct.warehouse_stock.push({
+              warehouse_id,
+              quantity: warehouse_qty,
+            });
+          }
 
-        if (warehouse_id && warehouse_qty !== null) {
-          productMap[id].warehouse_stock.push({
-            warehouse_id,
-            quantity: warehouse_qty,
-          });
-        }
+          if (outlet_id && outlet_qty !== null) {
+            newProduct.outlet_stock.push({
+              outlet_id,
+              quantity: outlet_qty,
+            });
+          }
 
-        if (outlet_id && outlet_qty !== null) {
-          productMap[id].outlet_stock.push({
-            outlet_id,
-            quantity: outlet_qty,
-          });
+          productData.push(newProduct);
         }
       }
 
@@ -145,12 +160,30 @@ app.post("/categories", (req, res) => {
   );
 });
 
+//Get  categories
+app.get("/get-categories", (req, res) => {
+  const { categoryName } = req.body;
+  connection.query(
+  `SELECT c.name, c.id, COUNT(p.id) AS product_count FROM categories c
+    LEFT JOIN products p ON c.id = p.category_id
+    GROUP BY c.id, c.name;
+    `,
+    (err, result) => {
+      if (err) {
+        res.status(500).send(err.message);
+      } else {
+        res.json(result);
+      }
+    }
+  );
+});
+
 // Create a new product
 app.post("/add-products", (req, res) => {
-  const { product_name, category_id, price, image_url } = req.body;
+  const { product_name, category_id, price, unit } = req.body;
   connection.query(
-    "INSERT INTO Products (product_name, price, category_id, image_url) VALUES (?, ?, ?, ?)",
-    [product_name, price, category_id, image_url],
+    "INSERT INTO Products (product_name, price, category_id, unit) VALUES (?, ?, ?, ?)",
+    [product_name, price, category_id, unit],
     (err, result) => {
       if (err) {
         res.status(500).send(err.message);
