@@ -142,7 +142,7 @@ app.get("/rawmaterials", (req, res) => {
 app.post("/outlets", (req, res) => {
   const { outlet_name, address, phone, email } = req.body;
   connection.query(
-    "INSERT INTO Outlets (outlet_name, address, phone, email) VALUES (?, ?, ?, ?)",
+    "INSERT INTO Outlets (outlet_name, address, phone, email) VALUES ($1, $2, $3, $4) RETURNING *",
     [outlet_name, address, phone, email],
     (err, result) => {
       if (err) {
@@ -192,7 +192,7 @@ app.get("/get-categories", (req, res) => {
 app.post("/add-products", (req, res) => {
   const { product_name, category_id, price, unit } = req.body;
   connection.query(
-    "INSERT INTO Products (product_name, price, category_id, unit) VALUES (?, ?, ?, ?)",
+    "INSERT INTO Products (product_name, price, category_id, unit) VALUES ($1, $2, $3, $4) RETURNING *",
     [product_name, price, category_id, unit],
     (err, result) => {
       if (err) {
@@ -208,7 +208,7 @@ app.post("/add-products", (req, res) => {
 app.post("/rawmaterials", (req, res) => {
   const { rawmaterial_name, description } = req.body;
   connection.query(
-    "INSERT INTO RawMaterials (rawmaterial_name, description) VALUES (?, ?)",
+    "INSERT INTO RawMaterials (rawmaterial_name, description) VALUES ($1, $2) RETURNING *",
     [rawmaterial_name, description],
     (err, result) => {
       if (err) {
@@ -242,7 +242,7 @@ app.post("/add-expense", (req, res) => {
   const { amount, description, outlet_id } = req.body;
   const currentDate = new Date();
   connection.query(
-    "INSERT INTO expenses (amount, description, outlet_id, expense_date) VALUES (?, ?, ?, ?)",
+    "INSERT INTO expenses (amount, description, outlet_id, expense_date) VALUES ($1, $2, $3, $4) RETURNING *",
     [amount, description, outlet_id, currentDate],
     (err, result) => {
       if (err) {
@@ -258,7 +258,7 @@ app.post("/add-expense", (req, res) => {
 app.post("/get-expense", (req, res) => {
   const { outlet_id } = req.body;
   connection.query(
-    "SELECT * from expenses where outlet_id = ?",
+    "SELECT * from expenses where outlet_id = $1",
     [outlet_id],
     (err, result) => {
       if (err) {
