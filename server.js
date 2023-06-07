@@ -295,3 +295,6 @@ app.post("./update-stock", (req, res) => {
     }
   );
 });
+
+const userRoutes = require('./app/routes/userRoutes');
+app.use('/api/users', userRoutes);
