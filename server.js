@@ -15,6 +15,8 @@ const bodyParser = require("body-parser");
 
 app.use(bodyParser.json());
 
+app.use(bodyParser.urlencoded({ extended: true }));
+
 const connection = new Client({
   user: 'root',
   host: 'dpg-chu4v2ndvk4olivdc7og-a',
@@ -41,28 +43,29 @@ connection.connect((err) => {
 // Retrieve all products
 app.get('/products', (req, res) => {
   const query = `
-    SELECT 
-      p.id, p.product_name, 
-      c.id as category_id ,
-      c.name as category_name, 
-      w.warehouse_id, 
-      w.quantity_available AS warehouse_qty, 
-      o.outlet_id, 
-      o.quantity_available AS outlet_qty
-    FROM 
-      products AS p
-      JOIN categories AS c ON p.category_id = c.id
-      LEFT JOIN warehouse_inventory AS w ON p.id = w.product_id
-      LEFT JOIN outlet_inventory AS o ON p.id = o.product_id
+  SELECT
+  p.id,
+  p.product_name,
+  c.id AS category_id,
+  c.name AS category_name,
+  w.warehouse_id,
+  w.quantity_available AS warehouse_qty,
+  o.outlet_id,
+  o.quantity_available AS outlet_qty
+FROM
+  products AS p
+  JOIN categories AS c ON p.category_id = c.id
+  LEFT JOIN warehouse_inventory AS w ON p.id = w.product_id
+  LEFT JOIN outlet_inventory AS o ON p.id = o.product_id
   `;
 
-  connection.query(query, (error, results) => {
+  connection.query(query, (error, result) => {
     if (error) {
-      res.status(500).json({ error: error.message }); 
+      res.status(500).json({ error: error.message });
     } else {
       const productData = [];
-      // console.log(results);
-      for (const row of results) {
+      
+      for (const row of result.rows) {
         const {
           id,
           product_name,
@@ -73,7 +76,7 @@ app.get('/products', (req, res) => {
           outlet_id,
           outlet_qty,
         } = row;
-       
+        
         const product = productData.find((p) => p.id === id);
         if (product) {
           if (warehouse_id && warehouse_qty !== null) {
@@ -82,7 +85,7 @@ app.get('/products', (req, res) => {
               quantity: warehouse_qty,
             });
           }
-
+  
           if (outlet_id && outlet_qty !== null) {
             product.outlet_stock.push({
               outlet_id,
@@ -100,30 +103,29 @@ app.get('/products', (req, res) => {
             warehouse_stock: [],
             outlet_stock: [],
           };
-
+  
           if (warehouse_id && warehouse_qty !== null) {
             newProduct.warehouse_stock.push({
               warehouse_id,
               quantity: warehouse_qty,
             });
           }
-
+  
           if (outlet_id && outlet_qty !== null) {
             newProduct.outlet_stock.push({
               outlet_id,
               quantity: outlet_qty,
             });
           }
-
+  
           productData.push(newProduct);
         }
       }
-
+  
       res.json(productData);
     }
   });
 });
-
 
 // Retrieve all raw materials
 app.get("/rawmaterials", (req, res) => {
