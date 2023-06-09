@@ -278,14 +278,14 @@ app.post("/get-expense", (req, res) => {
 app.post("./update-stock", (req, res) => {
   const { warehouseStock, outletStock, productId } = req.body;
   connection.query(
-    "UPDATE warehouse_inventory SET quantity_available = ? where product_id = ?",
+    "UPDATE warehouse_inventory SET quantity_available = $1 where product_id = $2",
     [warehouseStock, productId],
     (err, result) => {
       if (err) {
         res.status(500).send(err.message);
       } else {
         connection.query(
-          "UPDATE outlet_inventory SET quantity_available = ? where product_id = ?",
+          "UPDATE outlet_inventory SET quantity_available = $1 where product_id = $2",
           [outletStock, productId],
           (err, result2) => {
             if (err) {
