@@ -276,17 +276,17 @@ app.post("/get-expense", (req, res) => {
 
 //Update stocks
 app.post("./update-stock", (req, res) => {
-  const { warehouseStock, outletStock, productId } = req.body;
+  const { warehouseStock, outletStock, productId, outletId, warehouseId } = req.body;
   connection.query(
-    "UPDATE warehouse_inventory SET quantity_available = $1 where product_id = $2",
-    [warehouseStock, productId],
+    "UPDATE warehouse_inventory SET quantity_available = $1 where product_id = $2 and warehouse_id = $3",
+    [warehouseStock, productId, warehouseId],
     (err, result) => {
       if (err) {
         res.status(500).send(err.message);
       } else {
         connection.query(
-          "UPDATE outlet_inventory SET quantity_available = $1 where product_id = $2",
-          [outletStock, productId],
+          "UPDATE outlet_inventory SET quantity_available = $1 where product_id = $2 and outlet_id = $3",
+          [outletStock, productId, outletId],
           (err, result2) => {
             if (err) {
               res.status(500).send(err.message);
