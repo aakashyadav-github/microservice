@@ -275,7 +275,7 @@ app.post("/get-expense", (req, res) => {
 });
 
 //Update stocks
-app.post("./update-stock", (req, res) => {
+app.post("/update-stock", (req, res) => {
   const { warehouseStock, outletStock, productId, outletId, warehouseId } = req.body;
   connection.query(
     "UPDATE warehouse_inventory SET quantity_available = $1 where product_id = $2 and warehouse_id = $3",
