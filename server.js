@@ -216,28 +216,27 @@ app.post("/add-products",  async (req, res) => {
 
     // Update warehouse inventory for the new product to 0
     const warehouseInventoryQuery = `
-      UPDATE warehouse_inventory
-      SET quantity_available = 0
-      WHERE product_id = $1
+      INSERT INTO warehouse_inventory (warehouse_id, product_id, quantity_available)
+      SELECT warehouse_id, $1, 0
+      FROM warehouse
     `;
-    const warehouseInventoryValues = [productId];
-    await pool.query(warehouseInventoryQuery, warehouseInventoryValues);
+    await pool.query(warehouseInventoryQuery, [productId]);
 
-    // Update outlet inventory for the new product to 0
+    // Set outlet inventory for the new product to 0
     const outletInventoryQuery = `
-      UPDATE outlet_inventory
-      SET quantity_available = 0
-      WHERE product_id = $1
+      INSERT INTO outlet_inventory (outlet_id, product_id, quantity_available)
+      SELECT outlet_id, $1, 0
+      FROM outlet
     `;
-    const outletInventoryValues = [productId];
-    await pool.query(outletInventoryQuery, outletInventoryValues);
+    await pool.query(outletInventoryQuery, [productId]);
 
-    res.status(201).json({ message: 'Product inserted and inventory updated successfully' });
+    res.status(201).json({ message: 'Product inserted and inventory set to 0 for all outlets and warehouses' });
   } catch (error) {
     console.error('Error inserting product:', error);
     res.status(500).json({ error: 'An error occurred while inserting the product' });
   }
 });
+
 
 // Create a new raw material
 app.post("/rawmaterials", (req, res) => {
