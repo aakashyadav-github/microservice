@@ -203,65 +203,40 @@ app.get("/get-categories", (req, res) => {
 });
 
 // Create a new product
-app.post("/add-products", (req, res) => {
-  const { product_name, category_id, price, unit } = req.body;
-  connection.query(
-    "INSERT INTO Products (product_name, price, category_id, unit) VALUES ($1, $2, $3, $4) RETURNING *",
-    [product_name, price, category_id, unit],
-    (err, result) => {
-      if (err) {
-        res.status(500).send(err.message);
-      } else {
-        console.log("Insert Product", result);
-        const product_id = result.rows[0].id;
-        connection.query("SELECT outlet_id from outlets"),(errOutlet, resultOutlet) =>{
-          if(errOutlet){
-            res.status(500).send(errOutlet.message);
-          }else{
-            const outlets = resultOutlet.rows;
-            const dataOutlet = []
-            outlets.map(outlet=>{
-              dataOutlet.push({
-                "outlet_id": outlet,
-                "product_id": product_id,
-                "quantity_available": 0
-              })
-            })
-            connection.query("INSERT INTO outlet_inventory (outlet_id , product_id , quantity_available) VALUES {$dataOutlet}"),(errOutletInv, resultOutletInv) =>{
-              if(errOutletInv){
-                res.status(500).send(errOutletInv.message);
-              }else{
-                console.log("Insert Outlet Inventory", resultOutletInv);
-              }
-            }
-            
-          }
-        }
-        connection.query("SELECT warehouse_id from warehouse"),(errWare, resultWare) =>{
-          if(errWare){
-            res.status(500).send(errWare.message);
-          }else{
-            const warehouses = resultWare.rows;
-            const dataWareHouse = []
-            warehouses.map(ware=>{
-              dataWareHouse.push({
-                "warehouse_id": ware,
-                "product_id": product_id,
-                "quantity_available": 0
-              })
-            })
-            connection.query("INSERT INTO warehouse_inventory (warehouse_id , product_id , quantity_available) VALUES {$dataWareHouse}"),(errWareInv, resultWareInv) =>{
-              if(errWareInv){
-                res.status(500).send(errWareInv.message);
-              }else{
-                console.log("Insert Warehouse Inventory", resultOutletInv);
-              }
-            }
-          }
-        }
-      }
-    }
-  );
+app.post("/add-products",  async (req, res) => {
+  try {
+    const { product_name, price, unit, category_id } = req.body;
+
+    // Insert new product into the products table
+    const productQuery = `
+    INSERT INTO Products (product_name, price, category_id, unit) VALUES ($1, $2, $3, $4) RETURNING id`;
+    const productValues = [product_name, price, unit, category_id];
+    const productResult = await pool.query(productQuery, productValues);
+    const productId = productResult.rows[0].id;
+
+    // Update warehouse inventory for the new product to 0
+    const warehouseInventoryQuery = `
+      UPDATE warehouse_inventory
+      SET quantity_available = 0
+      WHERE product_id = $1
+    `;
+    const warehouseInventoryValues = [productId];
+    await pool.query(warehouseInventoryQuery, warehouseInventoryValues);
+
+    // Update outlet inventory for the new product to 0
+    const outletInventoryQuery = `
+      UPDATE outlet_inventory
+      SET quantity_available = 0
+      WHERE product_id = $1
+    `;
+    const outletInventoryValues = [productId];
+    await pool.query(outletInventoryQuery, outletInventoryValues);
+
+    res.status(201).json({ message: 'Product inserted and inventory updated successfully' });
+  } catch (error) {
+    console.error('Error inserting product:', error);
+    res.status(500).json({ error: 'An error occurred while inserting the product' });
+  }
 });
 
 // Create a new raw material
