@@ -109,7 +109,7 @@ FROM
           };
   
           if (warehouse_id && warehouse_qty !== null) {
-            const warehouseStock = product.warehouse_stock.find(
+            const warehouseStock = newProduct.warehouse_stock.find(
               (stock) => stock.warehouse_id === warehouse_id
             );
             if(!warehouseStock){
