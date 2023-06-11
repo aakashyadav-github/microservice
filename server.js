@@ -181,7 +181,9 @@ app.post("/categories", (req, res) => {
         console.log("Insert Product", result);
         const product_id = result.rows[0].id;
         connection.query("SELECT outlet_id from outlets"),(errOutlet, resultOutlet) =>{
-          if(resultOutlet){
+          if(errOutlet){
+            res.status(500).send(errOutlet.message);
+          }else{
             const outlets = resultOutlet.rows;
             const dataOutlet = []
             outlets.map(outlet=>{
@@ -192,7 +194,9 @@ app.post("/categories", (req, res) => {
               })
             })
             connection.query("INSERT INTO outlet_inventory (outlet_id , product_id , quantity_available) VALUES {$dataOutlet}"),(errOutletInv, resultOutletInv) =>{
-              if(resultOutletInv){
+              if(errOutletInv){
+                res.status(500).send(errOutletInv.message);
+              }else{
                 console.log("Insert Outlet Inventory", resultOutletInv);
               }
             }
@@ -200,7 +204,9 @@ app.post("/categories", (req, res) => {
           }
         }
         connection.query("SELECT warehouse_id from warehouse"),(errWare, resultWare) =>{
-          if(resultOutlet){
+          if(errWare){
+            res.status(500).send(errWare.message);
+          }else{
             const warehouses = resultWare.rows;
             const dataWareHouse = []
             warehouses.map(ware=>{
@@ -211,7 +217,9 @@ app.post("/categories", (req, res) => {
               })
             })
             connection.query("INSERT INTO warehouse_inventory (warehouse_id , product_id , quantity_available) VALUES {$dataWareHouse}"),(errWareInv, resultWareInv) =>{
-              if(resultWareInv){
+              if(errWareInv){
+                res.status(500).send(errWareInv.message);
+              }else{
                 console.log("Insert Warehouse Inventory", resultOutletInv);
               }
             }
