@@ -211,7 +211,7 @@ app.post("/add-products",  async (req, res) => {
     const productQuery = `
     INSERT INTO Products (product_name, price, category_id, unit) VALUES ($1, $2, $3, $4) RETURNING id`;
     const productValues = [product_name, price, unit, category_id];
-    const productResult = await pool.query(productQuery, productValues);
+    const productResult = await connection.query(productQuery, productValues);
     const productId = productResult.rows[0].id;
 
     // Update warehouse inventory for the new product to 0
@@ -220,7 +220,7 @@ app.post("/add-products",  async (req, res) => {
       SELECT warehouse_id, $1, 0
       FROM warehouse
     `;
-    await pool.query(warehouseInventoryQuery, [productId]);
+    await connection.query(warehouseInventoryQuery, [productId]);
 
     // Set outlet inventory for the new product to 0
     const outletInventoryQuery = `
@@ -228,7 +228,7 @@ app.post("/add-products",  async (req, res) => {
       SELECT outlet_id, $1, 0
       FROM outlet
     `;
-    await pool.query(outletInventoryQuery, [productId]);
+    await connection.query(outletInventoryQuery, [productId]);
 
     res.status(201).json({ message: 'Product inserted and inventory set to 0 for all outlets and warehouses' });
   } catch (error) {
