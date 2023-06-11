@@ -177,6 +177,40 @@ app.post("/categories", (req, res) => {
     (err, result) => {
       if (err) {
         res.status(500).send(err.message);
+      }else{
+        res.json(result);
+      }
+    }
+  );
+});
+
+//Get  categories
+app.get("/get-categories", (req, res) => {
+  const { categoryName } = req.body;
+  connection.query(
+  `SELECT c.name, c.id, COUNT(p.id) AS product_count FROM categories c
+    LEFT JOIN products p ON c.id = p.category_id
+    GROUP BY c.id, c.name;
+    `,
+    (err, result) => {
+      if (err) {
+        res.status(500).send(err.message);
+      } else {
+        res.json(result);
+      }
+    }
+  );
+});
+
+// Create a new product
+app.post("/add-products", (req, res) => {
+  const { product_name, category_id, price, unit } = req.body;
+  connection.query(
+    "INSERT INTO Products (product_name, price, category_id, unit) VALUES ($1, $2, $3, $4) RETURNING *",
+    [product_name, price, category_id, unit],
+    (err, result) => {
+      if (err) {
+        res.status(500).send(err.message);
       } else {
         console.log("Insert Product", result);
         const product_id = result.rows[0].id;
@@ -225,40 +259,6 @@ app.post("/categories", (req, res) => {
             }
           }
         }
-      }
-    }
-  );
-});
-
-//Get  categories
-app.get("/get-categories", (req, res) => {
-  const { categoryName } = req.body;
-  connection.query(
-  `SELECT c.name, c.id, COUNT(p.id) AS product_count FROM categories c
-    LEFT JOIN products p ON c.id = p.category_id
-    GROUP BY c.id, c.name;
-    `,
-    (err, result) => {
-      if (err) {
-        res.status(500).send(err.message);
-      } else {
-        res.json(result);
-      }
-    }
-  );
-});
-
-// Create a new product
-app.post("/add-products", (req, res) => {
-  const { product_name, category_id, price, unit } = req.body;
-  connection.query(
-    "INSERT INTO Products (product_name, price, category_id, unit) VALUES ($1, $2, $3, $4) RETURNING *",
-    [product_name, price, category_id, unit],
-    (err, result) => {
-      if (err) {
-        res.status(500).send(err.message);
-      } else {
-        res.sendStatus(result);
       }
     }
   );
