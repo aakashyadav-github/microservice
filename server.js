@@ -209,7 +209,7 @@ app.post("/add-products",  async (req, res) => {
 
     // Insert new product into the products table
     const productQuery = `
-    INSERT INTO Products (product_name, price, category_id, unit) VALUES ($1, $2, $3, $4) RETURNING id`;
+    INSERT INTO Products (product_name, price, unit, category_id) VALUES ($1, $2, $3, $4) RETURNING id`;
     const productValues = [product_name, price, unit, category_id];
     const productResult = await connection.query(productQuery, productValues);
     const productId = productResult.rows[0].id;
