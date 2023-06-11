@@ -226,7 +226,7 @@ app.post("/add-products",  async (req, res) => {
     const outletInventoryQuery = `
       INSERT INTO outlet_inventory (outlet_id, product_id, quantity_available)
       SELECT outlet_id, $1, 0
-      FROM outlet
+      FROM outlets
     `;
     await connection.query(outletInventoryQuery, [productId]);
 
