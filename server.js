@@ -178,7 +178,45 @@ app.post("/categories", (req, res) => {
       if (err) {
         res.status(500).send(err.message);
       } else {
-        res.json(result);
+        console.log("Insert Product", result);
+        const product_id = result.rows[0].id;
+        connection.query("SELECT outlet_id from outlets"),(errOutlet, resultOutlet) =>{
+          if(resultOutlet){
+            const outlets = resultOutlet.rows;
+            const dataOutlet = []
+            outlets.map(outlet=>{
+              dataOutlet.push({
+                "outlet_id": outlet,
+                "product_id": product_id,
+                "quantity_available": 0
+              })
+            })
+            connection.query("INSERT INTO outlet_inventory (outlet_id , product_id , quantity_available) VALUES {$dataOutlet}"),(errOutletInv, resultOutletInv) =>{
+              if(resultOutletInv){
+                console.log("Insert Outlet Inventory", resultOutletInv);
+              }
+            }
+            
+          }
+        }
+        connection.query("SELECT warehouse_id from warehouse"),(errWare, resultWare) =>{
+          if(resultOutlet){
+            const warehouses = resultWare.rows;
+            const dataWareHouse = []
+            warehouses.map(ware=>{
+              dataWareHouse.push({
+                "warehouse_id": ware,
+                "product_id": product_id,
+                "quantity_available": 0
+              })
+            })
+            connection.query("INSERT INTO warehouse_inventory (warehouse_id , product_id , quantity_available) VALUES {$dataWareHouse}"),(errWareInv, resultWareInv) =>{
+              if(resultWareInv){
+                console.log("Insert Warehouse Inventory", resultOutletInv);
+              }
+            }
+          }
+        }
       }
     }
   );
@@ -212,7 +250,7 @@ app.post("/add-products", (req, res) => {
       if (err) {
         res.status(500).send(err.message);
       } else {
-        res.sendStatus(201);
+        res.sendStatus(result);
       }
     }
   );
