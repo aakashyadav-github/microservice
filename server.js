@@ -109,10 +109,15 @@ FROM
           };
   
           if (warehouse_id && warehouse_qty !== null) {
+            const warehouseStock = product.warehouse_stock.find(
+              (stock) => stock.warehouse_id === warehouse_id
+            );
+            if(!warehouseStock){
             newProduct.warehouse_stock.push({
               warehouse_id,
               quantity: warehouse_qty,
             });
+          }
           }
   
           if (outlet_id && outlet_qty !== null) {
