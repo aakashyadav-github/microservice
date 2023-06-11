@@ -44,6 +44,12 @@ connection.connect((err) => {
 const userRoutes = require('./app/routes/userRoutes');
 app.use('/api/users', userRoutes(connection));
 
+const outletRoutes = require('./app/routes/outletRoutes');
+app.use('/api/outlet', outletRoutes(connection));
+
+const categoryRoutes = require('./app/routes/categoryRoutes');
+app.use('/api/category', categoryRoutes(connection));
+
 // Retrieve all products
 app.get('/products', (req, res) => {
   const query = `
@@ -152,56 +158,6 @@ app.get("/rawmaterials", (req, res) => {
   });
 });
 
-// Create a new outlet
-app.post("/outlets", (req, res) => {
-  const { outlet_name, address, phone, email } = req.body;
-  connection.query(
-    "INSERT INTO Outlets (outlet_name, address, phone, email) VALUES ($1, $2, $3, $4) RETURNING *",
-    [outlet_name, address, phone, email],
-    (err, result) => {
-      if (err) {
-        res.status(500).send(err.message);
-      } else {
-        res.sendStatus(201);
-      }
-    }
-  );
-});
-
-//Add new category
-app.post("/categories", (req, res) => {
-  const { categoryName } = req.body;
-  connection.query(
-    "INSERT INTO categories (name) VALUES ($1) RETURNING *",
-    [categoryName],
-    (err, result) => {
-      if (err) {
-        res.status(500).send(err.message);
-      }else{
-        res.json(result);
-      }
-    }
-  );
-});
-
-//Get  categories
-app.get("/get-categories", (req, res) => {
-  const { categoryName } = req.body;
-  connection.query(
-  `SELECT c.name, c.id, COUNT(p.id) AS product_count FROM categories c
-    LEFT JOIN products p ON c.id = p.category_id
-    GROUP BY c.id, c.name;
-    `,
-    (err, result) => {
-      if (err) {
-        res.status(500).send(err.message);
-      } else {
-        res.json(result);
-      }
-    }
-  );
-});
-
 // Create a new product
 app.post("/add-products",  async (req, res) => {
   try {
@@ -249,23 +205,6 @@ app.post("/rawmaterials", (req, res) => {
         res.status(500).send(err.message);
       } else {
         res.sendStatus(201);
-      }
-    }
-  );
-});
-
-// Update an outlet
-app.put("/outlets/:id", (req, res) => {
-  const { outlet_name, address, phone, email } = req.body;
-  const outletId = req.params.id;
-  connection.query(
-    "UPDATE Outlets SET outlet_name = ?, address = ?, phone = ?, email = ? WHERE outlet_id = ?",
-    [outlet_name, address, phone, email, outletId],
-    (err, result) => {
-      if (err) {
-        res.status(500).send(err.message);
-      } else {
-        res.sendStatus(200);
       }
     }
   );
