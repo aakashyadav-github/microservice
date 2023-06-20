@@ -19,7 +19,7 @@ module.exports = (connection) => {
     activateProducts: (req, res) => {
       const { productId } = req.body;
       connection.query(
-        `UPDATE products set status='active' WHERE id = $1`
+        "UPDATE products set status = 'active' WHERE id = $1"
         [productId],
         (err, result) => {
           if (err) {
