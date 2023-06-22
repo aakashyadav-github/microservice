@@ -3,7 +3,7 @@ module.exports = (connection) => {
     getInactiveProducts: (req, res) => {
       const { name, password, role } = req.body;
       connection.query(
-        `SELECT p.product_name, c.name AS category_name FROM products AS p
+        `SELECT p.product_name, c.name AS category_name, p.id FROM products AS p
         JOIN categories AS c ON p.category_id = c.id WHERE p.status = 'inactive';`,
         (err, result) => {
           if (err) {
