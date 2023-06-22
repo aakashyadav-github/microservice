@@ -54,7 +54,7 @@ const productRoutes = require('./app/routes/productRoutes');
 app.use('/api/product', productRoutes(connection));
 
 const orderRoutes = require('./app/routes/orderRoutes');
-app.use('/api/product', orderRoutes(connection));
+app.use('/api/order', orderRoutes(connection));
 
 // Retrieve all products
 app.get('/products', (req, res) => {

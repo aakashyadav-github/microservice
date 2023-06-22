@@ -1,7 +1,7 @@
-import { Router } from "express";
-const router = Router();
+const express = require("express");
+const router = express.Router();
 
-export default (connection) => {
+module.exports = (connection) => {
   const orderController = require("../controller/orderController")(connection);
 
   router.get("/get-orders", orderController.getOrders);
