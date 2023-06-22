@@ -1,7 +1,6 @@
 module.exports = (connection) => {
   return {
     getOrders: (req, res) => {
-      const { name, password, role } = req.body;
       connection.query(
         "SELECT * FROM orders",
         [name, password, role],
