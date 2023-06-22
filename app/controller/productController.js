@@ -16,12 +16,14 @@ module.exports = (connection) => {
         }
       );
     },
-    activateProduct: (req, res) => {
+    activateProducts: (req, res) => {
       const { productId } = req.body;
+      console.log(productId);
       connection.query(
         "UPDATE products set status = 'active' WHERE id = $1"
         [productId],
         (err, result) => {
+          console.log("err ",err, "result", result);
           if (err) {
             res.status(500).send(err.message);
           } else {
