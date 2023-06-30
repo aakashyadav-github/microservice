@@ -5,6 +5,6 @@ module.exports = (connection) => {
   const outletController = require("../controller/outletController")(connection);
 
   router.post("/", outletController.createOutlet);
-  router.get("/",outletController.fetchOutlet);
+  router.get("/get-outlets",outletController.fetchOutlet);
   return router;
 };
