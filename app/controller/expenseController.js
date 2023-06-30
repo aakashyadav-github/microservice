@@ -27,6 +27,20 @@ module.exports = (connection) => {
           }
         );
       },
+      fetchOutletExpense: (req, res) => {
+        const { selectedOutlet, dbDate } = req.body;
+        connection.query(
+        `SELECT * from expenses where outlet_id=$1 and expense_date = $2;`,
+        [selectedOutlet, dbDate],
+          (err, result) => {
+            if (err) {
+              res.status(500).send(err.message);
+            } else {
+              res.json(result);
+            }
+          }
+        );
+      },
     };
   };
   

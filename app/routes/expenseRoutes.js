@@ -6,5 +6,6 @@ module.exports = (connection) => {
 
   router.get("/get-expense",expenseController.fetchExpense);
   router.post("/add-expense",expenseController.addExpense);
+  router.post('/get-outlet-expense',expenseController.fetchOutletExpense);
   return router;
 };
