@@ -15,10 +15,8 @@ module.exports = (connection) => {
         );
       },
       fetchOutlet: (req, res) => {
-        const { name, password, role } = req.body;
         connection.query(
-          "SELECT * FROM outlets",
-          [name, password, role],
+          "SELECT outlet_id, outlet_name FROM outlets;",
           (err, result) => {
             if (err) {
               res.status(500).send(err.message);
