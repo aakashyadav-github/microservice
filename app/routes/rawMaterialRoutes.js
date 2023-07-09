@@ -4,6 +4,6 @@ const router = express.Router();
 module.exports = (connection) => {
   const rawMaterialController = require("../controller/rawMaterialController")(connection);
 
-  router.get("/", rawMaterialController.getRawMaterials);
+  router.post("/add", rawMaterialController.addRawMaterials);
   return router;
 };
