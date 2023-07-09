@@ -16,7 +16,7 @@ module.exports = (connection) => {
       },
       getRawMaterials: (req, res) => {
         connection.query(
-          "SELECT * FROM raw_materials RETURNING *",
+          "SELECT * FROM raw_materials;",
           (err, result) => {
             if (err) {
               res.status(500).send(err.message);
@@ -29,7 +29,7 @@ module.exports = (connection) => {
       addProductRawMaterial: (req, res) => {
         const { product_id, raw_material_id, quantity_required } = req.body;
         connection.query(
-          "INSERT INTO product_raw_materials (product_id, raw_material_id, quantity_required) VALUES ($1, $2, $3) RETURNING *",
+          "INSERT INTO product_raw_materials (product_id, raw_material_id, quantity_required) VALUES ($1, $2, $3) RETURNING *;",
           [product_id, raw_material_id, quantity_required],
           (err, result) => {
             if (err) {
