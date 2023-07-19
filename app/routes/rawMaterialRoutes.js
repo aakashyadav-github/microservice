@@ -6,6 +6,6 @@ module.exports = (connection) => {
 
   router.post("/add", rawMaterialController.addRawMaterials);
   router.get("/", rawMaterialController.getRawMaterials);
-  router.get('/add-product-raw-material', rawMaterialController.addProductRawMaterial);
+  router.post('/add-product-raw-material', rawMaterialController.addProductRawMaterial);
   return router;
 };
