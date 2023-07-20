@@ -173,7 +173,7 @@ app.get("/rawmaterials", (req, res) => {
 // Create a new product
 app.post("/add-products",  async (req, res) => {
   try {
-    const { product_name, price, unit, category_id } = req.body;
+    const { product_name, price, unit, category_id, rawMaterial } = req.body;
 
     // Insert new product into the products table
     const productQuery = `
@@ -197,6 +197,14 @@ app.post("/add-products",  async (req, res) => {
       FROM outlets
     `;
     await connection.query(outletInventoryQuery, [productId]);
+
+    const productRawMaterialQuery = `
+    INSERT INTO product_raw_materials (product_id, raw_material_id, quantity_required) VALUES ($1, $2, $3) RETURNING *;
+    `;
+
+    rawMaterial.map(async (item) => {
+       await connection.query(productRawMaterialQuery, [productId, item.raw_material_id, item.quantity_required]);
+    })
 
     res.status(201).json({ message: 'Product inserted and inventory set to 0 for all outlets and warehouses' });
   } catch (error) {
