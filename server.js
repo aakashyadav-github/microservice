@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const connection = new Client({
-  user: 'root',
+  user: 'postgres',
   host: 'shopdb.cyjf5lvpee5f.us-east-2.rds.amazonaws.com',
   database: 'ram_shiv_db',
   password: 'RamshivDB',
