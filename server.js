@@ -19,9 +19,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const connection = new Client({
   user: 'root',
-  host: 'dpg-chu4v2ndvk4olivdc7og-a',
+  host: 'shopdb.cyjf5lvpee5f.us-east-2.rds.amazonaws.com',
   database: 'ram_shiv_db',
-  password: 'aAEKnxPOX7EksJRIb0fAR6Zh0dQckQq7',
+  password: 'RamshivDB',
   port: 5432, // default PostgreSQL port
 });
 
