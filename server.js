@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port = 3002;
+const port = 3001;
 const { Client } = require('pg');
 
 var cors = require("cors");
@@ -18,10 +18,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const connection = new Client({
-  user: 'postgres',
-  host: 'shopdb.cyjf5lvpee5f.us-east-2.rds.amazonaws.com',
+  user: 'root',
+  host: 'localhost',
   database: 'ram_shiv_db',
-  password: 'RamshivDB',
+  password: '',
   port: 5432, // default PostgreSQL port
 });
 
