@@ -21,7 +21,7 @@ const connection = new Client({
   user: 'root',
   host: 'localhost',
   database: 'ram_shiv_db',
-  password: '',
+  password: 'RamshivDB',
   port: 5432, // default PostgreSQL port
 });
 
