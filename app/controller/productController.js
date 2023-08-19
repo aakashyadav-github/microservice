@@ -28,5 +28,48 @@ module.exports = (connection) => {
         }
       );
     },
+    makeInactive: (req, res) => {
+      const { productId } = req.body;
+      connection.query(
+        "UPDATE products SET status = 'inactive' WHERE id = $1;",
+        [productId],
+        (err, result) => {
+          if (err) {
+            res.status(500).send(err.message);
+          } else {
+            res.json(result);
+          }
+        }
+      );
+    },
+    deleteProduct: (req, res) => {
+      const { productId } = req.body;
+      connection.query(
+        "DELETE FROM product WHERE product_id = $1;",
+        [productId],
+        (err, result) => {
+          if (err) {
+            res.status(500).send(err.message);
+          } else {
+            res.json(result);
+          }
+        }
+      );
+    },
+    fetchCategoryProducts: (req, res) => {
+      const { category_id } = req.body;
+      connection.query(
+        `SELECT * FROM products WHERE category_id = $1;
+        `,
+        [category_id],
+        (err, result) => {
+          if (err) {
+            res.status(500).send(err.message);
+          } else {
+            res.json(result);
+          }
+        }
+      );
+    },
   };
 };
