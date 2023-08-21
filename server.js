@@ -93,6 +93,8 @@ FROM
         const {
           id,
           product_name,
+          unit,
+          image_url,
           category_id,
           category_name,
           warehouse_id,
@@ -125,6 +127,8 @@ FROM
           const newProduct = {
             id,
             product_name,
+            unit,
+            image_url,
             category: {
               category_id,
               category_name,
