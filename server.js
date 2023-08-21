@@ -68,6 +68,7 @@ app.get('/products', (req, res) => {
   SELECT
   p.id,
   p.product_name,
+  p.price,
   p.unit,
   p.image_url,
   c.id AS category_id,
@@ -93,6 +94,7 @@ FROM
         const {
           id,
           product_name,
+          price,
           unit,
           image_url,
           category_id,
@@ -127,6 +129,7 @@ FROM
           const newProduct = {
             id,
             product_name,
+            price,
             unit,
             image_url,
             category: {
