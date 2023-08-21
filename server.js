@@ -68,6 +68,8 @@ app.get('/products', (req, res) => {
   SELECT
   p.id,
   p.product_name,
+  p.unit,
+  p.image_url,
   c.id AS category_id,
   c.name AS category_name,
   w.warehouse_id,
