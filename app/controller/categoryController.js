@@ -15,11 +15,12 @@ module.exports = (connection) => {
         );
       },
       fetchCategory: (req, res) => {
-        const { categoryName } = req.body;
         connection.query(
-        `SELECT c.name, c.id, COUNT(p.id) AS product_count FROM categories c
-          LEFT JOIN products p ON c.id = p.category_id
-          GROUP BY c.id, c.name;
+        `SELECT c.name, c.id, COUNT(p.id) AS product_count
+        FROM categories c
+        LEFT JOIN products p ON c.id = p.category_id
+        WHERE c.status = 'enable'
+        GROUP BY c.id, c.name;
           `,
           (err, result) => {
             if (err) {
