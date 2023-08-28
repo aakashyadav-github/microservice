@@ -71,5 +71,20 @@ module.exports = (connection) => {
         }
       );
     },
+    updateProductPrice: (req, res) => {
+      const { id, price } = req.body;
+      connection.query(
+        `UPDATE products SET price = $1 WHERE id = $2;
+        `,
+        [id,price],
+        (err, result) => {
+          if (err) {
+            res.status(500).send(err.message);
+          } else {
+            res.json(result);
+          }
+        }
+      );
+    },
   };
 };

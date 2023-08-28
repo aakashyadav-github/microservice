@@ -9,5 +9,6 @@ module.exports = (connection) => {
   router.post("/makeInactive", productController.makeInactive);
   router.post("/delete", productController.deleteProduct);
   router.post("/fetchCategoryProducts", productController.fetchCategoryProducts);
+  router.post("updateProductPrice", productController.updateProductPrice);
   return router;
 };
