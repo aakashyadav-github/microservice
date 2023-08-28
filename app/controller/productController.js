@@ -76,7 +76,7 @@ module.exports = (connection) => {
       connection.query(
         `UPDATE products SET price = $1 WHERE id = $2;
         `,
-        [id,price],
+        [price,id],
         (err, result) => {
           if (err) {
             res.status(500).send(err.message);
