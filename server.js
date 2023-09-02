@@ -81,7 +81,7 @@ FROM
   products AS p
   JOIN categories AS c ON p.category_id = c.id
   LEFT JOIN warehouse_inventory AS w ON p.id = w.product_id
-  LEFT JOIN outlet_inventory AS o ON p.id = o.product_id where p.status='active'
+  LEFT JOIN outlet_inventory AS o ON p.id = o.product_id where p.status='active' and p.state='enable'
   `;
 
   connection.query(query, (error, result) => {
