@@ -211,7 +211,7 @@ app.post("/add-products",  async (req, res) => {
     INSERT INTO product_raw_materials (product_id, raw_material_id, quantity_required) VALUES ($1, $2, $3) RETURNING *;
     `;
 
-    rawMaterial.map(async (item) => {
+    rawMaterial && rawMaterial.map(async (item) => {
        await connection.query(productRawMaterialQuery, [productId, item.raw_material_id, item.quantity_required]);
     })
 
