@@ -3,7 +3,7 @@ module.exports = (connection) => {
       createCategory: (req, res) => {
         const { categoryName } = req.body;
         connection.query(
-          "INSERT INTO categories (name) VALUES ($1) RETURNING *",
+          "INSERT INTO categories (name, status) VALUES ($1, 'enable') RETURNING *",
           [categoryName],
           (err, result) => {
             if (err) {
