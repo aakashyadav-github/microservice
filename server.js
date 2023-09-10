@@ -1,4 +1,5 @@
 const express = require("express");
+const multer = require('multer');
 const app = express();
 const port = 3001;
 const { Client } = require('pg');
