@@ -6,6 +6,8 @@ const { Client } = require('pg');
 
 var cors = require("cors");
 
+app.use("/uploads", express.static("upload"));
+
 app.use(cors());
 
 app.listen(port, () => {
