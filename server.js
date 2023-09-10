@@ -11,6 +11,21 @@ app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Specify the folder where images will be stored.
+  },
+  filename: (req, file, cb) => {
+    // Use a unique filename for each image (you can customize this logic).
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + '-' + file.originalname);
+  },
+});
+
+// Create a multer instance with the storage engine.
+const upload = multer({ storage });
+
+
 const bodyParser = require("body-parser");
 
 app.use(bodyParser.json());
@@ -180,14 +195,16 @@ app.get("/rawmaterials", (req, res) => {
 });
 
 // Create a new product
-app.post("/add-products",  async (req, res) => {
+app.post("/add-products", upload.single('productImage'),  async (req, res) => {
   try {
     const { product_name, price, unit, category_id, rawMaterial, min_stock } = req.body;
 
+    const image_url = req.file ? req.file.path : '';
+
     // Insert new product into the products table
     const productQuery = `
-    INSERT INTO Products (product_name, price, unit, category_id, min_stock, state) VALUES ($1, $2, $3, $4, $5, 'enable') RETURNING id`;
-    const productValues = [product_name, price, unit, category_id, min_stock];
+    INSERT INTO Products (product_name, price, unit, category_id, min_stock, image_url, state) VALUES ($1, $2, $3, $4, $5, $6, 'enable') RETURNING id`;
+    const productValues = [product_name, price, unit, category_id, min_stock, image_url];
     const productResult = await connection.query(productQuery, productValues);
     const productId = productResult.rows[0].id;
 
