@@ -1,7 +1,8 @@
 module.exports = (connection) => {
   return {
     getOrders: (req, res) => {
-      connection.query("SELECT * FROM orders;", (err, result) => {
+      const { type } = req.query;
+      connection.query("SELECT * FROM orders where type=$1;",[type], (err, result) => {
         if (err) {
           res.status(500).send(err.message);
         } else {
