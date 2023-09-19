@@ -13,7 +13,7 @@ module.exports = (connection) => {
     addOrder: (req, res) => {
       const { customer_name, mobile_number, total_amount, type } = req.body;
       connection.query(
-        `INSERT into orders (customer_name, mobile_number,total_amount, type) VALUES ($1, $2, $3, $4) RETURNING *`,
+        `INSERT INTO orders (customer_name, mobile_number, total_amount, type, order_date) VALUES ($1, $2, $3, $4, CURRENT_DATE) RETURNING *`,
         [customer_name, mobile_number, total_amount, type],
         (err, result) => {
           if (err) {
