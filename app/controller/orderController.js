@@ -59,7 +59,7 @@ module.exports = (connection) => {
           note,
           productsForBill,
         } = req.body;
-        const orderQuery = `INSERT INTO orders (customer_name, mobile_number, total_amount, type, order_date,customer_address,delivery_date,delivery_time,discount,note,productsForBill) 
+        const orderQuery = `INSERT INTO orders (customer_name, mobile_number, total_amount, type, order_date,customer_address,delivery_date,delivery_time,discount,note) 
         VALUES ($1, $2, $3, $4, CURRENT_DATE, $5,$6,$7,$8,$9) RETURNING order_id`;
         const orderValues = [
           customer_name,
