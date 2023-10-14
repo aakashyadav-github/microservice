@@ -92,6 +92,7 @@ module.exports = (connection) => {
           .json({
             message:
               "Order Added successfully",
+              orderId: orderId
           });
       } catch (error) {
         console.error("Error inserting product:", error);
