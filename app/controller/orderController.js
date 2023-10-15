@@ -3,9 +3,12 @@ module.exports = (connection) => {
     getOrders: (req, res) => {
       const { type } = req.query;
       connection.query(
-        `SELECT o.*, oi.product_id, oi.quantity, oi.price
-        FROM orders AS o
-        JOIN order_items AS oi ON o.order_id = oi.order_id where type=$1;`,
+        `SELECT
+        o.*,
+        json_agg(oi.*) AS order_items
+      FROM orders AS o
+      LEFT JOIN order_items AS oi ON o.order_id = oi.order_id where type='normal'
+      GROUP BY o.order_id;`,
         [type],
         (err, result) => {
           if (err) {
