@@ -81,7 +81,7 @@ module.exports = (connection) => {
         const orderId = orderResult.rows[0].order_id;
 
         const orderItemQuery = `INSERT INTO order_items (order_id, product_id, quantity, price) VALUES ($1,$2,$3,$4)`;
-        const outletInventoryQuery = `UPDATE outlet_inventory SET quantity_available = quantity_available - $1 where product_id = $2 and outlet_id = $3`;
+        const outletInventoryQuery = `UPDATE outlet_inventory SET quantity_available = quantity_available - $1 where product_id = $2 and outlet_id = $3;`;
         {
           productsForBill &&
             productsForBill.map(async (order_item) => {
