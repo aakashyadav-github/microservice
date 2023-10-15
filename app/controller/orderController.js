@@ -51,6 +51,8 @@ module.exports = (connection) => {
           customer_name,
           mobile_number,
           total_amount,
+          advance_amount,
+          pending_amount,
           type,
           customer_address,
           delivery_date,
@@ -59,12 +61,14 @@ module.exports = (connection) => {
           note,
           productsForBill,
         } = req.body;
-        const orderQuery = `INSERT INTO orders (customer_name, mobile_number, total_amount, type, order_date,customer_address,delivery_date,delivery_time,discount,note) 
-        VALUES ($1, $2, $3, $4, CURRENT_DATE, $5,$6,$7,$8,$9) RETURNING order_id`;
+        const orderQuery = `INSERT INTO orders (customer_name, mobile_number, total_amount, advance_amount, pending_amount, type, order_date,customer_address,delivery_date,delivery_time,discount,note) 
+        VALUES ($1, $2, $3, $4, $5, $6, CURRENT_DATE, $7,$8,$9,$10,$11) RETURNING order_id`;
         const orderValues = [
           customer_name,
           mobile_number,
           total_amount,
+          advance_amount,
+          pending_amount,
           type,
           customer_address,
           delivery_date,
