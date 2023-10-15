@@ -60,6 +60,7 @@ module.exports = (connection) => {
           discount,
           note,
           productsForBill,
+          outletId,
         } = req.body;
         const orderQuery = `INSERT INTO orders (customer_name, mobile_number, total_amount, advance_amount, pending_amount, type, order_date,customer_address,delivery_date,delivery_time,discount,note) 
         VALUES ($1, $2, $3, $4, $5, $6, CURRENT_DATE, $7,$8,$9,$10,$11) RETURNING order_id`;
@@ -80,6 +81,7 @@ module.exports = (connection) => {
         const orderId = orderResult.rows[0].order_id;
 
         const orderItemQuery = `INSERT INTO order_items (order_id, product_id, quantity, price) VALUES ($1,$2,$3,$4)`;
+        const outletInventoryQuery = `UPDATE outlet_inventory SET quantity_available = quantity_available - $1 where product_id = $2 and outlet_id = $3`;
         {
           productsForBill &&
             productsForBill.map(async (order_item) => {
@@ -89,6 +91,11 @@ module.exports = (connection) => {
                 order_item.quantity,
                 order_item.selectedProduct.price,
               ]);
+              await connection.query (outletInventoryQuery, [
+                order_item.quantity,
+                order_item.selectedProduct.id,
+                outletId
+              ])
             });
         }
         res
