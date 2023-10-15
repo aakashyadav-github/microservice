@@ -85,7 +85,7 @@ module.exports = (connection) => {
         const orderResult = await connection.query(orderQuery, orderValues);
         const orderId = orderResult.rows[0].order_id;
 
-        const orderItemQuery = `INSERT INTO order_items (order_id, product_id, quantity, price) VALUES ($1,$2,$3,$4)`;
+        const orderItemQuery = `INSERT INTO order_items (order_id, product_id, quantity, price, product_name, category_name, product_unit) VALUES ($1,$2,$3,$4,$5,$6,$7)`;
         const outletInventoryQuery = `UPDATE outlet_inventory SET quantity_available = quantity_available - $1 where product_id = $2 and outlet_id = $3;`;
         {
           productsForBill &&
@@ -95,6 +95,9 @@ module.exports = (connection) => {
                 order_item.selectedProduct.id,
                 order_item.quantity,
                 order_item.selectedProduct.price,
+                order_item.selectedProduct.product_name,
+                order_item.selectedProduct.category.category_name,
+                order_item.selectedProduct.unit,
               ]);
               await connection.query (outletInventoryQuery, [
                 order_item.quantity,
