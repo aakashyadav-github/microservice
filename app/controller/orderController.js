@@ -7,7 +7,7 @@ module.exports = (connection) => {
         o.*,
         json_agg(oi.*) AS order_items
       FROM orders AS o
-      LEFT JOIN order_items AS oi ON o.order_id = oi.order_id where type='normal'
+      LEFT JOIN order_items AS oi ON o.order_id = oi.order_id where type=$1
       GROUP BY o.order_id;`,
         [type],
         (err, result) => {
