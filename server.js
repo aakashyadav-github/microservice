@@ -80,6 +80,9 @@ app.use('/api/expense', expenseRoutes(connection));
 const rawMaterialRoutes = require('./app/routes/rawMaterialRoutes');
 app.use('/api/rawMaterial', rawMaterialRoutes(connection));
 
+const employeeRoutes = require('./app/routes/employeeRoutes');
+app.use('/api/employee', employeeRoutes(connection));
+
 // Retrieve all products
 app.get('/products', (req, res) => {
   const query = `
