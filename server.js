@@ -201,7 +201,7 @@ app.get("/rawmaterials", (req, res) => {
 });
 
 //Create new employee
-app.post("api/employee/add", upload.single('photo'),  async (req, res) => {
+app.post("/api/employee/add", upload.single('photo'),  async (req, res) => {
   try{
     const { name, aadhar, mobileno, address, salary, dateofjoining, working_area, working_status, dob, fathers_name, mothers_name } =
         req.body;
