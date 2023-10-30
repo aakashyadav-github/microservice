@@ -4,7 +4,7 @@ const router = express.Router();
 module.exports = (connection) => {
   const employeeController = require("../controller/employeeController")(connection);
 
-  router.post("/add", employeeController.createEmployee);
+  // router.post("/add", employeeController.createEmployee);
   router.get("/", employeeController.fetchEmployee);
   return router;
 };

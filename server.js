@@ -200,6 +200,24 @@ app.get("/rawmaterials", (req, res) => {
   });
 });
 
+//Create new employee
+app.post("api/employee/add", upload.single('photo'),  async (req, res) => {
+  try{
+    const { name, aadhar, mobileno, address, salary, dateofjoining, working_area, working_status, dob, fathers_name, mothers_name } =
+        req.body;
+      const photo = req.file ? req.file.path : '';
+      const productQuery = `
+        INSERT INTO employees (name, aadhar, mobileno, address, salary, dateofjoining, photo, working_area, working_status, dob, fathers_name, mothers_name) VALUES ($1, $2, $3, $4, $5, $6, $7,$8, $9, $10, $11, $12) RETURNING *`;
+        const productValues = [name, aadhar, mobileno, address, salary, dateofjoining, photo, working_area, working_status, dob, fathers_name, mothers_name];
+        await connection.query(productQuery, productValues);
+        
+  res.status(201).json({ message: 'Employee inserted Successfully' });
+} catch (error) {
+  console.error('Error inserting product:', error);
+  res.status(500).json({ error: 'An error occurred while inserting the product' });
+}
+});
+
 // Create a new product
 app.post("/add-products", upload.single('productImage'),  async (req, res) => {
   try {
