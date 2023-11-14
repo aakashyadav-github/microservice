@@ -203,12 +203,12 @@ app.get("/rawmaterials", (req, res) => {
 //Create new employee
 app.post("/api/employee/add", upload.single('photo'),  async (req, res) => {
   try{
-    const { name, aadhar, mobileno, address, salary, dateofjoining, working_area, working_status, dob, fathers_name, mothers_name, account_number, ifsc, bank_name, account_holder_name } =
+    const { name, aadhar, mobileno, address, salary, dateofjoining, working_area, dob, fathers_name, mothers_name, account_number, ifsc, bank_name, account_holder_name } =
         req.body;
       const photo = req.file ? req.file.path : '';
       const employeeQuery = `
-        INSERT INTO employees (name, aadhar, mobileno, address, salary, dateofjoining, photo, working_area, working_status, dob, fathers_name, mothers_name, working_status) VALUES ($1, $2, $3, $4, $5, $6, $7,$8, $9, $10, $11, $12, 'active') RETURNING *`;
-        const employeeValues = [name, aadhar, mobileno, address, salary, dateofjoining, photo, working_area, working_status, dob, fathers_name, mothers_name];
+        INSERT INTO employees (name, aadhar, mobileno, address, salary, dateofjoining, photo, working_area, dob, fathers_name, mothers_name, working_status) VALUES ($1, $2, $3, $4, $5, $6, $7,$8, $9, $10, $11, 'active') RETURNING *`;
+        const employeeValues = [name, aadhar, mobileno, address, salary, dateofjoining, photo, working_area, dob, fathers_name, mothers_name];
         const employeeResult = await connection.query(employeeQuery, employeeValues);
         const employeeId = employeeResult.rows[0].employee_id;
 
