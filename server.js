@@ -203,13 +203,24 @@ app.get("/rawmaterials", (req, res) => {
 //Create new employee
 app.post("/api/employee/add", upload.single('photo'),  async (req, res) => {
   try{
-    const { name, aadhar, mobileno, address, salary, dateofjoining, working_area, working_status, dob, fathers_name, mothers_name } =
+    const { name, aadhar, mobileno, address, salary, dateofjoining, working_area, working_status, dob, fathers_name, mothers_name, account_number, ifsc, bank_name, account_holder_name } =
         req.body;
       const photo = req.file ? req.file.path : '';
-      const productQuery = `
-        INSERT INTO employees (name, aadhar, mobileno, address, salary, dateofjoining, photo, working_area, working_status, dob, fathers_name, mothers_name) VALUES ($1, $2, $3, $4, $5, $6, $7,$8, $9, $10, $11, $12) RETURNING *`;
-        const productValues = [name, aadhar, mobileno, address, salary, dateofjoining, photo, working_area, working_status, dob, fathers_name, mothers_name];
-        await connection.query(productQuery, productValues);
+      const employeeQuery = `
+        INSERT INTO employees (name, aadhar, mobileno, address, salary, dateofjoining, photo, working_area, working_status, dob, fathers_name, mothers_name, working_status) VALUES ($1, $2, $3, $4, $5, $6, $7,$8, $9, $10, $11, $12, 'active') RETURNING *`;
+        const employeeValues = [name, aadhar, mobileno, address, salary, dateofjoining, photo, working_area, working_status, dob, fathers_name, mothers_name];
+        const employeeResult = await connection.query(employeeQuery, employeeValues);
+        const employeeId = employeeResult.rows[0].employee_id;
+
+        const bankAccountQuery = `
+      INSERT INTO employee_bank_details (employee_id ,
+        account_number ,
+        bank_name ,
+        ifsc_number ,
+        account_holder_name)
+        VALUES ($1, $2, $3, $4, $5) RETURNING *;
+    `;
+    await connection.query(bankAccountQuery, [employeeId,account_number, bank_name, ifsc, account_holder_name]);
         
   res.status(201).json({ message: 'Employee inserted Successfully' });
 } catch (error) {
