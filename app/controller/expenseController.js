@@ -44,7 +44,7 @@ module.exports = (connection) => {
       fetchAllOutletExpense: (req, res) => {
         connection.query(
         `SELECT expense_date, outlet_id, SUM(amount) AS total_amount
-        FROM expense
+        FROM expenses
         GROUP BY expense_date, outlet_id
         ORDER BY expense_date, outlet_id;
         `,
