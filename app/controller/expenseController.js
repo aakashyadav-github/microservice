@@ -41,6 +41,22 @@ module.exports = (connection) => {
           }
         );
       },
+      fetchAllOutletExpense: (req, res) => {
+        connection.query(
+        `SELECT expense_date, outlet_id, SUM(amount) AS total_amount
+        FROM expense
+        GROUP BY expense_date, outlet_id
+        ORDER BY expense_date, outlet_id;
+        `,
+          (err, result) => {
+            if (err) {
+              res.status(500).send(err.message);
+            } else {
+              res.json(result);
+            }
+          }
+        );
+      },
     };
   };
   
