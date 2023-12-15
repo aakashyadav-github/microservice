@@ -6,5 +6,6 @@ module.exports = (connection) => {
 
   // router.post("/add", employeeController.createEmployee);
   router.get("/", employeeController.fetchEmployee);
+  router.put('/updateWorkingStatus', employeeController.updateWorkingStatus);
   return router;
 };
