@@ -119,6 +119,7 @@ FROM
           price,
           unit,
           image_url,
+          starred,
           category_id,
           category_name,
           warehouse_id,
@@ -154,6 +155,7 @@ FROM
             price,
             unit,
             image_url,
+            starred,
             category: {
               category_id,
               category_name,
