@@ -45,8 +45,8 @@ module.exports = (connection) => {
         connection.query(
         `SELECT expense_date, outlet_id, SUM(amount) AS total_amount, expense_id
         FROM expenses
-        GROUP BY expense_date, outlet_id
-        ORDER BY expense_date, outlet_id;
+        GROUP BY expense_date, outlet_id, expense_id
+        ORDER BY expense_date, outlet_id;        
         `,
           (err, result) => {
             if (err) {
