@@ -42,6 +42,25 @@ module.exports = (connection) => {
         }
       );
     },
+    starMark: (req, res) => {
+      const { productId } = req.body;
+      connection.query(
+        `UPDATE products
+        SET starred = CASE
+            WHEN starred = true THEN false
+            ELSE true
+          END
+        WHERE id = $1;`
+        [productId],
+        (err, result) => {
+          if (err) {
+            res.status(500).send(err.message);
+          } else {
+            res.json(result);
+          }
+        }
+      );
+    },
     deleteProduct: (req, res) => {
       const { productId } = req.body;
       connection.query(

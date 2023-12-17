@@ -92,6 +92,7 @@ app.get('/products', (req, res) => {
   p.price,
   p.unit,
   p.image_url,
+  p.starred,
   c.id AS category_id,
   c.name AS category_name,
   w.warehouse_id,
