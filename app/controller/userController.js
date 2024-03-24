@@ -30,7 +30,7 @@ module.exports = (connection) => {
     },
     getUsers: (res =>{
       connection.query(
-        "SELECT * from users;",
+        "SELECT * from users",
         (err, result) => {
           if (err) {
             res.status(500).send(err.message);
