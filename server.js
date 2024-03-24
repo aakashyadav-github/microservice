@@ -83,6 +83,9 @@ app.use('/api/rawMaterial', rawMaterialRoutes(connection));
 const employeeRoutes = require('./app/routes/employeeRoutes');
 app.use('/api/employee', employeeRoutes(connection));
 
+const requestTaskRoutes = require('./app/routes/requestTaskRoutes');
+app.use('/api/request', requestTaskRoutes(connection));
+
 // Retrieve all products
 app.get('/products', (req, res) => {
   const query = `
