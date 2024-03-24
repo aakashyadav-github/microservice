@@ -28,5 +28,17 @@ module.exports = (connection) => {
         }
       );
     },
+    getUsers: (req, res =>{
+      connection.query(
+        "SELECT * from users;",
+        (err, result) => {
+          if (err) {
+            res.status(500).send(err.message);
+          } else {
+            res.json(result);
+          }
+        }
+      )
+    })
   };
 };

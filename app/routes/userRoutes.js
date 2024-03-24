@@ -6,5 +6,6 @@ module.exports = (connection) => {
 
   router.post("/", userController.createUser);
   router.post("/login",userController.loginUser);
+  router.get("/getUsers", userController.getUsers);
   return router;
 };
