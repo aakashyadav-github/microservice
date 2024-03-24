@@ -28,7 +28,7 @@ module.exports = (connection) => {
         }
       );
     },
-    getUsers: (req, res =>{
+    getUsers: (res =>{
       connection.query(
         "SELECT * from users;",
         (err, result) => {
