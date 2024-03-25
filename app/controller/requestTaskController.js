@@ -14,5 +14,19 @@ module.exports = (connection) => {
           }
         );
       },
+      getRequestTask: (req, res) => {
+        const { id } = req.body;
+        connection.query(
+          `SELECT * FROM RequestTasks where recieverid=$1;`,
+          [id],
+          (err, result) => {
+            if (err) {
+              res.status(500).send(err.message);
+            } else {
+              res.json(result);
+            }
+          }
+        );
+      },
     };
 };
