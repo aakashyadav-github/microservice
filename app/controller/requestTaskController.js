@@ -17,7 +17,10 @@ module.exports = (connection) => {
       getRequestTask: (req, res) => {
         const { id } = req.body;
         connection.query(
-          `SELECT * FROM RequestTasks where recieverid=$1;`,
+          `SELECT RequestTasks.*, Products.*
+          FROM RequestTasks
+          JOIN Products ON RequestTasks.productid = Products.id
+          WHERE RequestTasks.recieverid = $1;`,
           [id],
           (err, result) => {
             if (err) {
