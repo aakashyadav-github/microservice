@@ -6,6 +6,6 @@ module.exports = (connection) => {
 
   router.post("/createRequestTask", requestTaskController.createRequestTask);
   router.post("/getRequestTask", requestTaskController.getRequestTask);
-  router.post("/completeRequestTask", requestTaskController.completeRequestTask);
+  router.post("/completeRequestTask", requestTaskController.getRequestTask);
   return router;
 };
