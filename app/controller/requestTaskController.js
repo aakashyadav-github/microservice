@@ -32,7 +32,7 @@ module.exports = (connection) => {
       );
     },
     completeRequestTask: (req, res) => {
-      const { requestid } = req.body;
+      const { requestid, quantity, productid } = req.body;
       connection.query(
         `UPDATE RequestTasks SET status = 'Completed' WHERE requestid = $1;`,
         [requestid],
@@ -42,16 +42,15 @@ module.exports = (connection) => {
           } else {
             connection.query(
               `UPDATE warehouse_inventory
-                SET quantity = warehouse_inventory.quantity + rt.quantity
-                FROM RequestTasks rt
-                WHERE warehouse_inventory.product_id = rt.product_id
-                AND rt.product_id = $1`,
-              [requestid],
-              (err, result) => {
-                if (err) {
-                  res.status(500).send(err.message);
+                SET quantity = warehouse_inventory.quantity + $1
+                FROM warehouse_inventory
+                WHERE warehouse_inventory.product_id = $2`,
+              [quantity, productid],
+              (errWareInv, resultWareInv) => {
+                if (errWareInv) {
+                  res.status(500).send(errWareInv.message);
                 } else {
-                  res.status(201).json(result);
+                  res.json(resultWareInv);
                 }
               }
             );
