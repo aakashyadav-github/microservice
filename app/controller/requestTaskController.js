@@ -43,7 +43,6 @@ module.exports = (connection) => {
             connection.query(
               `UPDATE warehouse_inventory
                 SET quantity = warehouse_inventory.quantity + $1
-                FROM warehouse_inventory
                 WHERE warehouse_inventory.product_id = $2`,
               [quantity, productid],
               (errWareInv, resultWareInv) => {
